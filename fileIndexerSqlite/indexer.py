@@ -11,13 +11,15 @@ def main():
     for subdir, dirs, files in os.walk(rootdir):
         for filename in files:
             print(os.path.join(subdir, filename))
-            filedate=time.strftime('%Y-%m-%d %H:%M:%S',time.gmtime(os.path.getmtime(os.path.join(subdir, filename))))
-            cursor.execute("""INSERT INTO filetable VALUES (?,?,?,?);""",(filename,os.path.join(subdir, filename),os.path.getsize(os.path.join(subdir, filename)),filedate))
+            try:
+                filedate=time.strftime('%Y-%m-%d %H:%M:%S',time.gmtime(os.path.getmtime(os.path.join(subdir, filename))))
+                cursor.execute("""INSERT INTO filetable VALUES (?,?,?,?);""",(filename,os.path.join(subdir, filename),os.path.getsize(os.path.join(subdir, filename)),filedate))
+            except:
+                cursor.execute("""INSERT INTO filetable VALUES (?,?,NULL,NULL);""", (
+                filename, os.path.join(subdir, filename)))
             #if filename.endswith(".asm") or filename.endswith(".py"):
                 # print(os.path.join(directory, filename))
             #    continue
-            #else:
-             #   continue
 
     connection.commit()
     connection.close()
