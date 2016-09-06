@@ -10,10 +10,10 @@ def main():
 
     for subdir, dirs, files in os.walk(rootdir):
         for filename in files:
-            print(os.path.join(subdir, filename))
+            print(os.path.join(subdir, filename).encode('ascii', 'ignore'))
             try:
-                filedate=time.strftime('%Y-%m-%d %H:%M:%S',time.gmtime(os.path.getmtime(os.path.join(subdir, filename))))
-                cursor.execute("""INSERT INTO filetable VALUES (?,?,?,?);""",(filename,os.path.join(subdir, filename),os.path.getsize(os.path.join(subdir, filename)),filedate))
+                filedate=time.strftime('%Y-%m-%d %H:%M:%S',time.gmtime(os.path.getmtime(os.path.join(subdir, filename).encode('ascii', 'ignore'))))
+                cursor.execute("""INSERT INTO filetable VALUES (?,?,?,?);""",(filename,os.path.join(subdir, filename).encode('ascii', 'ignore'),os.path.getsize(os.path.join(subdir, filename).encode('ascii', 'ignore')),filedate))
             except:
                 cursor.execute("""INSERT INTO filetable VALUES (?,?,NULL,NULL);""", (
                 filename, os.path.join(subdir, filename)))
